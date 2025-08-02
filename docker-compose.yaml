@@ -1,0 +1,58 @@
+services:
+  # Laravel Backend Services
+  backend-php-fpm:
+    image: jkaninda/laravel-php-fpm:latest
+    container_name: php-fpm
+    restart: unless-stopped
+    user: www-data
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - default
+  backend-nginx-server:
+    image: jkaninda/nginx-fpm:alpine
+    container_name: nginx-server
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - DOCUMENT_ROOT=/var/www/html/public
+      - CLIENT_MAX_BODY_SIZE=20M
+      - PHP_FPM_HOST=php-fpm:9000
+    networks:
+      - default
+  db:
+    image: postgres:15-alpine
+    container_name: laravel_db_pg
+    restart: always
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel_user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Next.js Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nextjs_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://backend-nginx-server:80
+    depends_on:
+      - backend-php-fpm
+      - backend-nginx-server
+
+volumes:
+  db_data:
