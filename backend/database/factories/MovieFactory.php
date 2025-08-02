@@ -21,7 +21,7 @@ class MovieFactory extends Factory
 
         return [
             'title' => $this->faker->unique()->sentence(rand(1, 3)),
-            'description' => $this->faker->paragraph(rand(1, 3)),
+            'description' => $this->faker->sentence(rand(3, 6)),
             'pg_rating_id' => $pgRatingId,
         ];
     }
