@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('movies')->group(function () {
@@ -10,5 +11,7 @@ Route::prefix('movies')->group(function () {
     Route::put('/{id}', [MovieController::class, 'update']);
     Route::delete('/{id}', [MovieController::class, 'destroy']);
 });
+
+Route::get('/settings', [SettingsController::class, 'index']);
 
 
