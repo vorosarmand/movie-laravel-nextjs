@@ -63,6 +63,10 @@ class MovieController
         );
 
         Movie::find($id)->update($request->all());
+        $movie = Movie::find($id)->load('pgRating');
+
+        return response()->json($movie, 200);
+
     }
 
     /**

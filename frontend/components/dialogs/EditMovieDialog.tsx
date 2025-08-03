@@ -11,6 +11,8 @@ import { useState } from "react";
 import z from "zod";
 import { MovieForm, MovieFormSchema } from "../forms/MovieForm";
 import { Movie } from "@/types/movies";
+import { editMovie } from "@/store/slices/moviesSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function EditMovieDialog({
   settings,
@@ -19,16 +21,22 @@ export default function EditMovieDialog({
   settings: { pg_ratings: PgRating[] };
   movie: Movie;
 }) {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
-  function onSubmit(data: z.infer<typeof MovieFormSchema>) {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL_PUBLIC}/api/movies/${movie.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+  async function onSubmit(data: z.infer<typeof MovieFormSchema>) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL_PUBLIC}/api/movies/${movie.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const updatedMovie = await res.json();
+    dispatch(editMovie(updatedMovie));
     setOpen(false);
   }
 
