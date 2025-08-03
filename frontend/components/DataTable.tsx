@@ -8,10 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAppSelector } from "@/store/hooks";
 import { Movie } from "@/types/movies";
-import { PgRating } from "@/types/settings";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -21,23 +20,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import AddMovieDialog from "./dialogs/AddMovieDialog";
 import EditMovieDialog from "./dialogs/EditMovieDialog";
-import { Button } from "./ui/button";
+import RemoveMovieDialog from "./dialogs/RemoveMovieDialog";
 import { Input } from "./ui/input";
 import SelectComponent from "./ui/select";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  settings: {
-    pg_ratings: PgRating[];
-  };
-}
-
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  settings,
-}: DataTableProps<TData, TValue>) {
+export function DataTable() {
+  const movies = useAppSelector((state) => state.movies);
+  const settings = useAppSelector((state) => state.settings);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [filterValue, setFilterValue] = useState({
@@ -45,8 +34,15 @@ export function DataTable<TData, TValue>({
     pg_rating_id: searchParams.get("pg_rating_id") || "all",
   });
 
+  const columns = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "title", header: "Title" },
+    { accessorKey: "description", header: "Description" },
+    { accessorKey: "pg_rating.name", header: "PG Rating" },
+  ];
+
   const table = useReactTable({
-    data,
+    data: movies,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -151,7 +147,7 @@ export function DataTable<TData, TValue>({
                       settings={settings}
                       movie={row.original as Movie}
                     />
-                    <Button variant="destructive">Delete</Button>
+                    <RemoveMovieDialog movie={row.original as Movie} />
                   </TableCell>
                 </TableRow>
               ))

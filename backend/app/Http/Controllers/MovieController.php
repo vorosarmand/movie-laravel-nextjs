@@ -32,7 +32,9 @@ class MovieController
             'pg_rating_id' => 'required|exists:pg_ratings,id',
         ]);
 
-        Movie::create($request->all());
+        $movie = Movie::create($request->all())->load('pgRating');
+
+        return response()->json($movie, 201);
     }
 
     /**
