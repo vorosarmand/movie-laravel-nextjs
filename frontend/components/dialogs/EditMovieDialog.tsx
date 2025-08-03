@@ -9,18 +9,21 @@ import {
 import { PgRating } from "@/types/settings";
 import { useState } from "react";
 import z from "zod";
-import { AddMovieForm, addMovieFormSchema } from "./AddMovieForm";
+import { MovieForm, MovieFormSchema } from "../forms/MovieForm";
+import { Movie } from "@/types/movies";
 
-export default function AddMovieDialog({
+export default function EditMovieDialog({
   settings,
+  movie,
 }: {
   settings: { pg_ratings: PgRating[] };
+  movie: Movie;
 }) {
   const [open, setOpen] = useState(false);
 
-  function onSubmit(data: z.infer<typeof addMovieFormSchema>) {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/movies`, {
-      method: "POST",
+  function onSubmit(data: z.infer<typeof MovieFormSchema>) {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL_PUBLIC}/api/movies/${movie.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -33,13 +36,13 @@ export default function AddMovieDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">+ Add Movie</Button>
+          <Button variant="outline">Edit</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add Movie</DialogTitle>
+            <DialogTitle>Edit Movie</DialogTitle>
           </DialogHeader>
-          <AddMovieForm settings={settings} onSubmit={onSubmit} />
+          <MovieForm settings={settings} onSubmit={onSubmit} movie={movie} />
         </DialogContent>
       </form>
     </Dialog>

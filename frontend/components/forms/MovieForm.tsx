@@ -15,9 +15,10 @@ import {
 } from "@/components/ui/form";
 import SelectComponent from "@/components/ui/select";
 import { PgRating } from "@/types/settings";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
+import { Movie } from "@/types/movies";
 
-export const addMovieFormSchema = z.object({
+export const MovieFormSchema = z.object({
   title: z
     .string({
       error: "Please provide a title for the movie.",
@@ -33,17 +34,24 @@ export const addMovieFormSchema = z.object({
   }),
 });
 
-export function AddMovieForm({
+export function MovieForm({
   settings,
+  movie,
   onSubmit,
 }: {
   settings: {
     pg_ratings: PgRating[];
   };
-  onSubmit: (data: z.infer<typeof addMovieFormSchema>) => void;
+  movie?: Movie;
+  onSubmit: (data: z.infer<typeof MovieFormSchema>) => void;
 }) {
-  const form = useForm<z.infer<typeof addMovieFormSchema>>({
-    resolver: zodResolver(addMovieFormSchema),
+  const form = useForm<z.infer<typeof MovieFormSchema>>({
+    resolver: zodResolver(MovieFormSchema),
+    defaultValues: {
+      title: movie?.title || "",
+      description: movie?.description || "",
+      pg_rating_id: movie?.pg_rating_id.toString() || "1",
+    },
   });
 
   return (
@@ -86,13 +94,13 @@ export function AddMovieForm({
             <FormItem>
               <FormLabel>PG Rating</FormLabel>
               <SelectComponent
-                defaultValue={field.value}
                 options={settings.pg_ratings.map((pgRating) => ({
                   key: pgRating.id.toString(),
                   value: pgRating.name,
                 }))}
                 placeholder="Choose a PG Rating"
                 onValueChange={field.onChange}
+                defaultValue={field.value}
                 isFullWidth
               />
               <FormDescription>

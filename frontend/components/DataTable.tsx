@@ -8,19 +8,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Movie } from "@/types/movies";
+import { PgRating } from "@/types/settings";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import debounce from "lodash.debounce";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import AddMovieDialog from "./dialogs/AddMovieDialog";
+import EditMovieDialog from "./dialogs/EditMovieDialog";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import SelectComponent from "./ui/select";
-import { PgRating } from "@/types/settings";
-import debounce from "lodash.debounce";
-import AddMovieDialog from "./AddMovieDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -143,21 +146,31 @@ export function DataTable<TData, TValue>({
                       )}
                     </TableCell>
                   ))}
+                  <TableCell className="flex gap-2">
+                    <EditMovieDialog
+                      settings={settings}
+                      movie={row.original as Movie}
+                    />
+                    <Button variant="destructive">Delete</Button>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
+              <NoResults columnLength={columns.length} />
             )}
           </TableBody>
         </Table>
       </div>
     </div>
+  );
+}
+
+function NoResults({ columnLength }: { columnLength: number }) {
+  return (
+    <TableRow>
+      <TableCell colSpan={columnLength} className="h-24 text-center">
+        No results.
+      </TableCell>
+    </TableRow>
   );
 }
