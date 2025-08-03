@@ -15,7 +15,7 @@ export function MoviesDataTable() {
   const searchParams = useSearchParams();
   const [filterValue, setFilterValue] = useState({
     title: searchParams.get("filter[title]") || "",
-    pg_rating_id: searchParams.get("filter[pg_rating_id]") || "all",
+    pg_rating_id: searchParams.get("filter[pg_rating_id]") || "",
   });
 
   const applyFiltersToUrl = (newFilterValue: typeof filterValue) => {

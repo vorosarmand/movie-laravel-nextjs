@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { MoviesDataTable } from "@/components/MoviesDataTable";
 import { useAppDispatch } from "@/store/hooks";
 import { setMovies } from "@/store/slices/moviesSlice";
-import { MoviesDataTable } from "@/components/MoviesDataTable";
+import { setSettings } from "@/store/slices/settingsSlice";
 import { Movie } from "@/types/movies";
 import { PgRating } from "@/types/settings";
-import { setSettings } from "@/store/slices/settingsSlice";
+import { useEffect } from "react";
 
 interface MoviesProps {
   initialMovies: Movie[];
