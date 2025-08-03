@@ -19,20 +19,16 @@ export function MoviesDataTable() {
   });
 
   const applyFiltersToUrl = (newFilterValue: typeof filterValue) => {
-    console.log(newFilterValue);
     const params = new URLSearchParams(searchParams);
 
     Object.keys(newFilterValue).forEach((key) => {
       const index = key as keyof typeof newFilterValue;
       if (newFilterValue[index] != "") {
-        console.log(newFilterValue[index]);
-        console.log(`filter[${index}]`, newFilterValue[index]);
         params.set(`filter[${index}]`, newFilterValue[index]);
       } else {
         params.delete(`filter[${index}]`);
       }
     });
-    console.log(`?${params.toString()}`);
     router.push(`?${params.toString()}`);
   };
 
