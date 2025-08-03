@@ -2,6 +2,7 @@ import Movies from "@/components/Movies";
 import { getMoviesWithFiltersQuery } from "@/requests/movies";
 import { getSettingsQuery } from "@/requests/settings";
 import StoreProvider from "@/store/StoreProvider";
+import { Toaster } from "sonner";
 
 interface HomeProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -26,6 +27,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <StoreProvider>
+      <Toaster />
       <div className="font-sans">
         <div className="w-full max-w-7xl m-auto p-10">
           <h1 className="font-bold text-3xl mb-10">Movies</h1>

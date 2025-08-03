@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { removeMovie } from "@/store/slices/moviesSlice";
 import { Movie } from "@/types/movies";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function RemoveMovieDialog({ movie }: { movie: Movie }) {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ export default function RemoveMovieDialog({ movie }: { movie: Movie }) {
     removeMovieQuery(movie.id);
     dispatch(removeMovie(movie.id));
     setOpen(false);
+    toast.success("Movie removed successfully");
   }
 
   return (

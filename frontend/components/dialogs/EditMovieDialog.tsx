@@ -14,6 +14,7 @@ import { PgRating } from "@/types/settings";
 import { useState } from "react";
 import z from "zod";
 import { MovieForm, MovieFormSchema } from "../forms/MovieForm";
+import { toast } from "sonner";
 
 export default function EditMovieDialog({
   settings,
@@ -30,6 +31,7 @@ export default function EditMovieDialog({
     const updatedMovie = await res.json();
     dispatch(editMovie(updatedMovie));
     setOpen(false);
+    toast.success("Movie saved successfully");
   }
 
   return (

@@ -13,6 +13,7 @@ import { PgRating } from "@/types/settings";
 import { useState } from "react";
 import z from "zod";
 import { MovieForm, MovieFormSchema } from "../forms/MovieForm";
+import { toast } from "sonner";
 
 export default function AddMovieDialog({
   settings,
@@ -25,9 +26,9 @@ export default function AddMovieDialog({
   async function onSubmit(data: z.infer<typeof MovieFormSchema>) {
     const res = await addMovieQuery(data);
     const newMovie = await res.json();
-    console.log(newMovie);
     dispatch(addMovie(newMovie));
     setOpen(false);
+    toast.success("Movie added successfully");
   }
 
   return (
