@@ -11,16 +11,21 @@ The project is built using Laravel for the backend and Next.js for the frontend.
 
 ## Setup
 
+1. Clone the repository
+2. In both the frontend and the backend repository, copy the `.env.example` file to `.env` and fill in the required values
+3. Build and start the project using `docker compose up -d --build`
+4. Run the migrations and seeders using `docker exec -it backend-php-fpm php artisan migrate --seed`
+
 To start the project, run:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 To stop the project, run:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 The project is now available at:
