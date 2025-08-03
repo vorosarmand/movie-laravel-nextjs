@@ -6,30 +6,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useDialog } from "@/hooks/useDialog";
 import { addMovieQuery } from "@/requests/movies";
-import { useAppDispatch } from "@/store/hooks";
 import { addMovie } from "@/store/slices/moviesSlice";
 import { PgRating } from "@/types/settings";
-import { useState } from "react";
-import z from "zod";
-import { MovieForm, MovieFormSchema } from "../forms/MovieForm";
-import { toast } from "sonner";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { MovieForm } from "../forms/MovieForm";
 
 export default function AddMovieDialog({
   settings,
 }: {
   settings: { pg_ratings: PgRating[] };
 }) {
-  const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
-
-  async function onSubmit(data: z.infer<typeof MovieFormSchema>) {
-    const res = await addMovieQuery(data);
-    const newMovie = await res.json();
-    dispatch(addMovie(newMovie));
-    setOpen(false);
-    toast.success("Movie added successfully");
-  }
+  const { open, setOpen, onSubmit } = useDialog({
+    queryFn: addMovieQuery,
+    dispatchFn: addMovie,
+    successMessage: "Movie added successfully",
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -41,6 +34,9 @@ export default function AddMovieDialog({
           <DialogHeader>
             <DialogTitle>Add Movie</DialogTitle>
           </DialogHeader>
+          <DialogDescription>
+            Add your favorite movie by providing its details.
+          </DialogDescription>
           <MovieForm settings={settings} onSubmit={onSubmit} />
         </DialogContent>
       </form>
