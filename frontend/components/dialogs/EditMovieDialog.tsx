@@ -6,13 +6,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { editMovieQuery } from "@/requests/movies";
+import { useAppDispatch } from "@/store/hooks";
+import { editMovie } from "@/store/slices/moviesSlice";
+import { Movie } from "@/types/movies";
 import { PgRating } from "@/types/settings";
 import { useState } from "react";
 import z from "zod";
 import { MovieForm, MovieFormSchema } from "../forms/MovieForm";
-import { Movie } from "@/types/movies";
-import { editMovie } from "@/store/slices/moviesSlice";
-import { useAppDispatch } from "@/store/hooks";
 
 export default function EditMovieDialog({
   settings,
@@ -25,16 +26,7 @@ export default function EditMovieDialog({
   const [open, setOpen] = useState(false);
 
   async function onSubmit(data: z.infer<typeof MovieFormSchema>) {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_PUBLIC}/api/movies/${movie.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const res = await editMovieQuery(data, movie.id);
     const updatedMovie = await res.json();
     dispatch(editMovie(updatedMovie));
     setOpen(false);

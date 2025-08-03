@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { removeMovieQuery } from "@/requests/movies";
 import { useAppDispatch } from "@/store/hooks";
 import { removeMovie } from "@/store/slices/moviesSlice";
 import { Movie } from "@/types/movies";
@@ -16,12 +17,7 @@ export default function RemoveMovieDialog({ movie }: { movie: Movie }) {
   const [open, setOpen] = useState(false);
 
   async function onSubmit() {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL_PUBLIC}/api/movies/${movie.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    removeMovieQuery(movie.id);
     dispatch(removeMovie(movie.id));
     setOpen(false);
   }

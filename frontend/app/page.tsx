@@ -1,4 +1,6 @@
 import Movies from "@/components/Movies";
+import { getMoviesWithFiltersQuery } from "@/requests/movies";
+import { getSettingsQuery } from "@/requests/settings";
 import StoreProvider from "@/store/StoreProvider";
 
 interface HomeProps {
@@ -16,13 +18,11 @@ export default async function Home({ searchParams }: HomeProps) {
     })
     .join("&");
 
-  const settings = await fetch(`${process.env.API_URL}/api/settings`).then(
-    (res) => res.json()
-  );
+  const settings = await getSettingsQuery().then((res) => res.json());
 
-  const movies = await fetch(
-    `${process.env.API_URL}/api/movies?${queryString}`
-  ).then((res) => res.json());
+  const movies = await getMoviesWithFiltersQuery(queryString).then((res) =>
+    res.json()
+  );
 
   return (
     <StoreProvider>
