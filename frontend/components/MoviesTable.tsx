@@ -18,6 +18,7 @@ import {
 } from "@tanstack/react-table";
 import EditMovieDialog from "./dialogs/EditMovieDialog";
 import RemoveMovieDialog from "./dialogs/RemoveMovieDialog";
+import PaginationComponent from "./ui/pagination";
 
 export function MoviesTable() {
   const movies = useAppSelector((state) => state.movies);
@@ -31,16 +32,30 @@ export function MoviesTable() {
   ];
 
   const table = useReactTable<Movie>({
-    data: movies,
+    data: movies.data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <Table>
-      <Header table={table} />
-      <Body table={table} settings={settings} columnLength={columns.length} />
-    </Table>
+    <>
+      <Table>
+        <Header table={table} />
+        <Body
+          table={table}
+          settings={settings}
+          columnLength={columns.length}
+          movies={movies}
+        />
+      </Table>
+      <div className="w-full flex justify-center p-4">
+        <PaginationComponent
+          prev_page_url={movies.prev_page_url}
+          next_page_url={movies.next_page_url}
+          links={movies.links}
+        />
+      </div>
+    </>
   );
 }
 
@@ -71,10 +86,20 @@ function Body({
   table,
   settings,
   columnLength,
+  movies,
 }: {
   table: ReturnType<typeof useReactTable<Movie>>;
   settings: Settings;
   columnLength: number;
+  movies: {
+    prev_page_url: string | null;
+    next_page_url: string | null;
+    links: {
+      active: boolean;
+      label: string;
+      url: string;
+    }[];
+  };
 }) {
   return (
     <TableBody>

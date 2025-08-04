@@ -29,6 +29,7 @@ export function MoviesDataTable() {
         params.delete(`filter[${index}]`);
       }
     });
+    params.delete("page");
     router.push(`?${params.toString()}`);
   };
 

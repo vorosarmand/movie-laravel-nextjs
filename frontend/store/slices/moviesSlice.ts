@@ -3,20 +3,37 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const moviesSlice = createSlice({
   name: "movies",
-  initialState: [] as Movie[],
+  initialState: {
+    current_page: 1,
+    per_page: 15,
+    total: 0,
+    next_page_url: null,
+    prev_page_url: null,
+    data: [] as Movie[],
+    links: [] as {
+      active: boolean;
+      label: string;
+      url: string;
+    }[],
+  },
   reducers: {
     setMovies(_, action) {
       return action.payload;
     },
     addMovie(state, action) {
-      state.push(action.payload);
+      state.data.push(action.payload);
     },
     editMovie(state, action) {
-      const index = state.findIndex((movie) => movie.id === action.payload.id);
-      state[index] = action.payload;
+      const index = state.data.findIndex(
+        (movie) => movie.id === action.payload.id
+      );
+      state.data[index] = action.payload;
     },
     removeMovie(state, action) {
-      return state.filter((movie) => movie.id !== action.payload.id);
+      return {
+        ...state,
+        data: state.data.filter((movie) => movie.id !== action.payload.id),
+      };
     },
   },
 });

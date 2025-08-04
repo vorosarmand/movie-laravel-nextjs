@@ -9,7 +9,14 @@ import { PgRating } from "@/types/settings";
 import { useEffect } from "react";
 
 interface MoviesProps {
-  initialMovies: Movie[];
+  initialMovies: {
+    current_page: number;
+    per_page: number;
+    total: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    data: Movie[];
+  };
   settings: {
     pg_ratings: PgRating[];
   };

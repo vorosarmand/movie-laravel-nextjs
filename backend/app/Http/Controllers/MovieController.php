@@ -18,7 +18,8 @@ class MovieController
         return QueryBuilder::for(Movie::class)->with('pgRating')
             ->allowedFilters(['title', AllowedFilter::exact('pg_rating_id')])
             ->allowedSorts(['id', 'title', 'description', 'pg_rating_id'])
-            ->get();
+            ->orderBy('id')
+            ->paginate(15);
     }
 
     /**
